@@ -14,7 +14,7 @@ class UserList extends Controller
   }
   public function allUserList()
   {
-    $allUserList  = User::all();
+    $allUserList  = User::with('roleUsers:id,name')->get();
     return response()->json($allUserList);
   }
 }

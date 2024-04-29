@@ -1,10 +1,18 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import spinningOverLay from "@/components/spinning-overlay/SpinningOverLay.vue";
 import axios from "axios";
+
+const props = defineProps({
+  userDetails: {
+    type: Object,
+    required: true
+  }
+});
 // Create a ref to track loading state
 const spinning = ref(false);
 const userRole = ref([]);
+const user_id = ref('');
 const name = ref('');
 const email = ref('');
 const password = ref('');
@@ -29,13 +37,14 @@ const roleList = async () => {
 };
 const submitForm = () => {
     const user = {
+        id: user_id.value,
         name: name.value,
         email: email.value,
         password: password.value,
         role_id: role_id.value,
     }
     spinning.value=true;
-    axios.post('/admin/user/store',user).then(res=>{
+    axios.post('/admin/user/update',user).then(res=>{
         if (res.data.success) {
             toastr.success(res.data.success);
             closeModal();
@@ -62,38 +71,61 @@ const submitForm = () => {
 };
 // Method to close the modal and reset form
 const closeModal = () => {
-    const addModalClose = document.getElementById('ModalUserClose')
+    const addModalClose = document.getElementById('ModalUserEditClose')
     addModalClose.click()
     // Reset form
     name.value = '';
     email.value = '';
     password.value = '';
     role_id.value = '';
+    hasError.value = false;
+};
+const modalClose = () => {
+    // Reset form
+    props.userDetails= {};
+    password.value = '';
+    hasError.value = false;
+    errorMessage.value = '';
 };
 onMounted(()=>{
   roleList();
 });
+watch(() => props.userDetails, (newValue, oldValue) => {
+  // Set isRouteListLoaded to true when routeList changes
+  name.value = newValue.name
+  email.value = newValue.email
+  user_id.value = newValue.id
+  // Update selected role_id based on user's roles
+  newValue.role_users.forEach(userRoleName => {
+    console.log(userRoleName.name)
+    const userRoleData = userRole.value.find(role => role.name === userRoleName.name);
+    if (userRoleData) {
+      role_id.value = userRoleData.id;
+      return; // Exit loop after finding the first matching role
+    }
+  });
+});
 </script>
 
 <template>
-    <div class="modal fade" id="addUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-hidden="true" aria-labelledby="editUserModalLabel" >
         <spinningOverLay :spinner="spinning"/>
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-add-new-role">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-add-new-role" >
             <div class="modal-content p-3 p-md-5">
-                <button type="button" id="ModalUserClose" class="btn-close btn-pinned" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" id="ModalUserEditClose" @click="modalClose" class="btn-close btn-pinned" data-bs-dismiss="modal" aria-label="Close"></button>
               <div class="modal-body">
                 <div v-if="hasError" class="alert alert-danger">{{ errorMessage }}</div>
                 <div class="text-center mb-4">
-                  <h3 class="mb-2">Add New User & Permission</h3>
+                  <h3 class="mb-2">Update User & Permission</h3>
                   <p class="text-muted">Permissions you use and assign to your users.</p>
                 </div>
-                <form id="addPermissionForm" class="row" @submit.prevent="submitForm">
+                <form class="row" @submit.prevent="submitForm">
                   <div class="mb-3">
-                    <label class="form-label" for="add-user-fullname">Full Name</label><span class="text-danger">*</span>
+                    <label class="form-label" for="esit-user-fullname">Full Name</label><span class="text-danger">*</span>
                     <input
                       type="text"
                       class="form-control"
-                      id="add-user-fullname"
+                      id="esit-user-fullname"
                       placeholder="John Doe"
                       v-model="name"
                       name="name"
@@ -102,10 +134,10 @@ onMounted(()=>{
                     />
                   </div>
                   <div class="mb-3">
-                    <label class="form-label" for="add-user-email">Email</label><span class="text-danger">*</span>
+                    <label class="form-label" for="edit-user-email">Email</label><span class="text-danger">*</span>
                     <input
                       type="text"
-                      id="add-user-email"
+                      id="edit-user-email"
                       class="form-control"
                       placeholder="john.doe@example.com"
                       aria-label="john.doe@example.com"
@@ -115,27 +147,26 @@ onMounted(()=>{
                     />
                   </div>
                   <div class="mb-3">
-                    <label class="form-label" for="add-user-password">Password</label><span class="text-danger">*</span>
+                    <label class="form-label" for="edit-user-password">Password</label><span class="text-info"> (Optional)</span>
                     <input
                       type="password"
-                      id="add-user-password"
+                      id="edit-user-password"
                       class="form-control"
                       placeholder="********"
                       aria-label="password"
-                      required
                       v-model="password"
                       name="password" />
                   </div>
                   <div class="mb-3">
-                    <label class="form-label" for="user-role">User Role</label><span class="text-danger">*</span>
-                    <select id="user-role" v-model="role_id" name="role_id" required class="form-select">
+                    <label class="form-label" for="edit-user-role">User Role</label><span class="text-danger">*</span>
+                    <select id="edit-user-role" v-model="role_id" name="role_id" required class="form-select">
                       <option value="" selected disabled >Select User Role Permission</option>
                       <option v-for="(roles, index) in userRole" :key="index" :value="roles.id">{{roles.name}}</option>
                     </select>
                   </div>
 
                   <div class="col-12 text-center demo-vertical-spacing">
-                    <button type="submit" class="btn btn-primary me-sm-3 me-1">Create User</button>
+                    <button type="submit" class="btn btn-primary me-sm-3 me-1">Update User</button>
                     <button
                       type="reset"
                       class="btn btn-label-secondary"

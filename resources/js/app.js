@@ -6,6 +6,8 @@
 import { createApp } from 'vue';
 import toastr from 'toastr';
 import 'toastr/build/toastr.min.css'; // Import Toastr CSS
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
@@ -19,6 +21,7 @@ import ExampleComponent from './components/ExampleComponent.vue';
 import RoleCards from './components/roles/RoleCards.vue';
 import UserList from './components/user/UserList.vue';
 window.toastr = toastr;
+app.use(VueSweetalert2);
 app.component('example-component', ExampleComponent);
 app.component('role-cards', RoleCards);
 app.component('user-list', UserList);
