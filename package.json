@@ -187,6 +187,7 @@
     "timepicker": "~1.14.1",
     "toastr": "~2.1.4",
     "typeahead.js": "~0.11.1",
-    "vue": "^3.4.25"
+    "vue": "^3.4.25",
+    "vue-sweetalert2": "^5.0.5"
   }
 }

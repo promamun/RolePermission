@@ -4,8 +4,10 @@ import axios from 'axios';
 import spinningOverLay from '../spinning-overlay/SpinningOverLay.vue';
 import {ref, onMounted, watch} from 'vue';
 import ModalAddUser from "./modals/ModalAddUser.vue";
+import ModalEditUser from "@/components/user/modals/ModalEditUser.vue";
 
 const users = ref([]);
+const userDetails = ref('');
 const spinner = ref(false);
 let dataTableInstance = null;
 
@@ -22,6 +24,11 @@ const userList = async () => {
 };
 
 const initializeDataTable = () => {
+  // Check if DataTable instance already exists
+  if (dataTableInstance) {
+    // Destroy the existing DataTable instance
+    dataTableInstance.destroy();
+  }
   dataTableInstance = $('.datatables-users').DataTable({
     dom:
       '<"row me-2"' +
@@ -61,20 +68,73 @@ const initializeDataTable = () => {
         data: 'name',
       },
       {
-        data: 'name',
-        render: (data, type, row) => row.name
+        data: 'role_users',
+        render: function(data, type, row, meta) {
+          if (Array.isArray(data)) {
+            // Iterate over the role array and create a string representation
+            const roles = data.map(role => role.name).join(', ');
+            return roles;
+          } else {
+            return ''; // Handle case when data is not an array
+          }
+        }
       },
       {
         data: 'role',
-        render: (data, type, row) => row.name
-      },{
-        data: 'role',
-        render: (data, type, row) => row.name
+        render: function(data, type, full, meta) {
+          // const fullDataString = JSON.stringify(full);
+          return `<div class="d-inline-block"><a href="javascript:;" class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="text-primary ti ti-dots-vertical"></i></a><ul class="dropdown-menu dropdown-menu-end m-0"><li><a href="javascript:;"  data-user-edit="${full.id}"  class="dropdown-item user-edit"><i class="text-primary ti ti-pencil"></i>Edit</a></li><div class="dropdown-divider"></div><li><a href="javascript:;" data-user-delete="${full.id}" id="confirm-color" class="dropdown-item text-danger delete-user"><i class="text-danger ti ti-trash-x"></i>Delete</a></li></ul></div>`;
+        }
       },
     ],
+    drawCallback: function() {
+      // Bind click event after the table is drawn
+      $('.user-edit').on('click', function() {
+        const userId = $(this).data('user-edit');
+        userEdit(userId);
+      });
+      // Bind click event after the table is drawn
+      $('.delete-user').on('click', function() {
+        const userId = $(this).data('user-delete');
+        deleteUser(userId);
+      });
+    },
   });
 };
+const deleteUser = async (id) => {
+  try {
+    const isConfirmed = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'Once deleted, you will not be able to recover this user!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    });
 
+    if (isConfirmed.isConfirmed) {
+      // User confirmed deletion
+      const response = await axios.delete(`/admin/user/delete/${id}`);
+      if (response.data.success){
+        await userList(); // Refresh user list after deletion
+        Swal.fire('Deleted!', response.data.success,'success');
+      }else {
+        Swal.fire('Error',response.data.message)
+      }
+    }
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    Swal.fire('Error', error.response.data.message);
+  }
+};
+const userEdit = (userId) => {
+  // Find the user in the user list by id
+  const user = users.value.find(user => user.id === userId);
+  userDetails.value = user
+  // Open the modal for editing the user
+  $('#editUserModal').modal('show');
+}
 
 onMounted(() => {
   userList();
@@ -184,12 +244,12 @@ watch(users, () => {
           <th>SN</th>
           <th>User</th>
           <th>Role</th>
-          <th>Status</th>
           <th>Actions</th>
         </tr>
         </thead>
       </table>
     </div>
   </div>
-  <modal-add-user />
+  <modal-add-user @updateUserList="userList" />
+  <modal-edit-user @updateUserList="userList" :userDetails="userDetails" />
 </template>
