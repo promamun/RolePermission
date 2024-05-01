@@ -13,6 +13,7 @@ use App\Http\Controllers\apps\UserList;
 use App\Http\Controllers\apps\AccessRoles;
 use App\Http\Controllers\cards\CardGamifications;
 
+Route::get('/', [LoginBasic::class, 'index'])->name('dashboard-analytics');
 Route::get('/dashboard', [Analytics::class, 'index'])->name('dashboard-analytics');
 Route::get('/auth-login', [LoginBasic::class, 'index'])->name('admin-auth-login');
 Route::post('/auth-login', [LoginBasic::class, 'AdminLoginRequest'])->name('admin-auth-login-request');
