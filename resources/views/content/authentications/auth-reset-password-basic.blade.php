@@ -49,7 +49,18 @@ $customizerHidden = 'customizer-hide';
           <!-- /Logo -->
           <h4 class="mb-1 pt-2">Reset Password 🔒</h4>
           <p class="mb-4">for <span class="fw-medium">john.doe@email.com</span></p>
-          <form id="formAuthentication" action="{{url('auth/login-basic')}}" method="GET">
+          <form id="formAuthentication" action="{{ route('password.store')}}" method="POST">
+            @csrf
+            <!-- Password Reset Token -->
+        <input type="hidden" name="token" value="{{ $request->route('token') }}">
+        <!-- Email Address -->   
+            <div class="mb-3 form-password-toggle">
+              <label class="form-label" for="email">Email</label>
+              <div class="input-group input-group-merge">
+                <input type="email" id="email" class="form-control"  value="{{ old('email', $request->email) }}" readonly name="email" aria-describedby="email" />
+                <span class="input-group-text cursor-pointer"><i class="ti ti-eye-off"></i></span>
+              </div>
+            </div>
             <div class="mb-3 form-password-toggle">
               <label class="form-label" for="password">New Password</label>
               <div class="input-group input-group-merge">
@@ -60,7 +71,7 @@ $customizerHidden = 'customizer-hide';
             <div class="mb-3 form-password-toggle">
               <label class="form-label" for="confirm-password">Confirm Password</label>
               <div class="input-group input-group-merge">
-                <input type="password" id="confirm-password" class="form-control" name="confirm-password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
+                <input type="password" id="confirm-password" class="form-control" name="password_confirmation" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
                 <span class="input-group-text cursor-pointer"><i class="ti ti-eye-off"></i></span>
               </div>
             </div>
