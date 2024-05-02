@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Vite;
 
@@ -20,6 +21,13 @@ class AppServiceProvider extends ServiceProvider
    */
   public function boot(): void
   {
+    Blade::directive('can', function ($expression) {
+      return "<?php if(auth()->check() && auth()->user()->hasPermission($expression)): ?>";
+    });
+
+    Blade::directive('endcan', function ($expression) {
+      return "<?php endif; ?>";
+    });
     Vite::useStyleTagAttributes(function (?string $src, string $url, ?array $chunk, ?array $manifest) {
       if ($src !== null) {
         return [

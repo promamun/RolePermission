@@ -10,6 +10,12 @@ use Nette\Schema\ValidationException;
 
 class RollsController extends Controller
 {
+  public function userPermissionList()
+  {
+    $user = auth()->user();
+    $user->userPermissionList();
+    return $user;
+  }
   public function userRoleList()
   {
     $userRoleList = Role::all();

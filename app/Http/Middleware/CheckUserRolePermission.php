@@ -15,6 +15,9 @@ class CheckUserRolePermission
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if (!auth()->check() || !auth()->user()->hasPermission($request->route()->getName())) {
+          abort(403, 'Unauthorized User Action.');
+        }
         return $next($request);
     }
 }
