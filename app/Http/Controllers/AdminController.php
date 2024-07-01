@@ -10,8 +10,8 @@ use Illuminate\Validation\ValidationException;
 
 class AdminController extends Controller
 {
-    public function user_store(Request $request)
-    {
+  public function user_store(Request $request)
+  {
     $validatedData = $request->validate([
       'name' => 'required|string|max:255',
       'email' => 'required|email',
@@ -36,6 +36,7 @@ class AdminController extends Controller
       return response()->json(['error' => $exception->getMessage()], 500);
     }
   }
+
   public function user_update(Request $request)
   {
     try {
@@ -66,9 +67,11 @@ class AdminController extends Controller
       return response()->json(['error' => $exception->getMessage()], 500);
     }
   }
-  public function AdminLoginRequest(Request $request){
+
+  public function AdminLoginRequest(Request $request)
+  {
     try {
-      $this->validate($request,[
+      $this->validate($request, [
         'email' => 'required|email',
         'password' => 'required', // Assuming password is required
       ]);
@@ -84,12 +87,13 @@ class AdminController extends Controller
         return redirect()->back()->with('error', 'Invalid credentials')->withInput();
       }
 
-    }catch (ValidationException $validationException){
-      return redirect()->back()->with(['error'=>$validationException->getMessage()],422)->withInput();
-    } catch (\Exception $exception){
-      return redirect()->back()->with(['error'=>$exception->getMessage()],500)->withInput();
+    } catch (ValidationException $validationException) {
+      return redirect()->back()->with(['error' => $validationException->getMessage()], 422)->withInput();
+    } catch (\Exception $exception) {
+      return redirect()->back()->with(['error' => $exception->getMessage()], 500)->withInput();
     }
   }
+
   public function user_delete($id)
   {
     try {
