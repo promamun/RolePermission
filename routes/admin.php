@@ -63,13 +63,13 @@ Route::group(['prefix' => 'member'], function () {
   // Route::get('/view/{id}', [MemberController::class, 'member_view'])->name('member.view');
 });
 
- // settings Routes
- Route::group(['prefix' => 'settings'], function () {
-  //View Routes
-  Route::get('/global-settings', [SettingsController::class, 'globalSettings'])->name('global-settings');
-  Route::post('/global-settings-update', [SettingsController::class, 'globalSettingsUpdate'])->name('global-settings-update');
-  Route::get('/pages/about-us', [SettingsController::class, 'aboutUs'])->name('about-us');
-  Route::post('/pages/about-us-store', [SettingsController::class, 'storeAboutUs'])->name('aboutUs-store');
-  Route::get('/pages/contact-us', [SettingsController::class, 'contactUs'])->name('contact-us');
-  Route::post('/pages/contactUs-store', [SettingsController::class, 'storeContactUs'])->name('contactUs-store');
-});
+  // settings Routes
+  Route::group(['prefix' => 'settings'], function () {
+    //View Routes
+    Route::get('/global-settings', [SettingsController::class, 'globalSettings'])->name('global-settings');
+    Route::post('/global-settings-update', [SettingsController::class, 'globalSettingsUpdate'])->name('global-settings-update');
+    Route::get('/pages/about-us', [SettingsController::class, 'aboutUs'])->name('about-us');
+    Route::post('/pages/about-us-store', [SettingsController::class, 'storeAboutUs'])->name('aboutUs-store');
+    Route::get('/pages/contact-us', [SettingsController::class, 'contactUs'])->name('contact-us');
+    Route::post('/pages/contactUs-store', [SettingsController::class, 'storeContactUs'])->name('contactUs-store');
+  });
