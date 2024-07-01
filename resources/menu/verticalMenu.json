@@ -42,6 +42,28 @@
           "slug": "user-access-roles"
         }
       ]
+    },
+    {
+      "name": "Aplication Settings",
+      "icon": "menu-icon tf-icons ti ti-settings",
+      "slug": "aplication-settings",
+      "submenu": [
+        {
+          "url": "admin/settings/global-settings",
+          "name": "Global Settings",
+          "slug": "global-settings"
+        },
+        {
+          "url": "admin/settings/pages/about-us",
+          "name": "About Us",
+          "slug": "about-us"
+        },
+        {
+          "url": "admin/settings/pages/contact-us",
+          "name": "Contact Us",
+          "slug": "contact-us"
+        }
+      ]
     }
   ]
 }
