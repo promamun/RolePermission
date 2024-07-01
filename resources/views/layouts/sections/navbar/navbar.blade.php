@@ -453,7 +453,7 @@ $navbarDetached = ($navbarDetached ?? '');
                   <span class="align-middle">Team Settings</span>
                 </a>
               </li>
-              @can('create', )
+              @can('create')
               <li>
                 <a class="dropdown-item" href="#">
                   <i class='ti ti-user me-2'></i>

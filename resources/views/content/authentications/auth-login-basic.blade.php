@@ -53,16 +53,23 @@ $customizerHidden = 'customizer-hide';
           <form id="formAuthentication" class="mb-3" action="{{route('login')}}" method="POST">
             @csrf
             <div class="mb-3">
+<<<<<<< HEAD
               <label for="email" class="form-label">Email</label>
               <input type="text" class="form-control" id="email" value="{{old('email')}}" name="email" placeholder="Enter your email" autofocus>
               <x-input-error :messages="$errors->get('email')" class="mt-2 text-danger" />
+=======
+              <label for="email" class="form-label">Email</label> <span class="text-danger">*</span>
+              <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email" autofocus>
+              <x-input-error :messages="$errors->get('email')" class="mt-2" />
+>>>>>>> e0e25982f790c6c4c5be9a107d312ff7a16b000d
             </div>
             <div class="mb-3 form-password-toggle">
               <div class="d-flex justify-content-between">
-                <label class="form-label" for="password">Password</label>
-                <a href="{{url('auth/forgot-password-basic')}}">
+                <label class="form-label" for="password">Password</label><span class="text-danger">*</span>
+                <a href="{{ route('password.request') }}">
                   <small>Forgot Password?</small>
                 </a>
+                <x-input-error :messages="$errors->get('password')" class="mt-2" />
               </div>
               <div class="input-group input-group-merge">
                 <input type="password" id="password" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
@@ -70,9 +77,14 @@ $customizerHidden = 'customizer-hide';
                 <x-input-error :messages="$errors->get('password')" class="mt-2 text-danger" />
               </div>
             </div>
+
             <div class="mb-3">
               <div class="form-check">
+<<<<<<< HEAD
                 <input class="form-check-input" name="remember" type="checkbox" id="remember-me">
+=======
+                <input class="form-check-input" type="checkbox" id="remember-me" name="remember">
+>>>>>>> e0e25982f790c6c4c5be9a107d312ff7a16b000d
                 <label class="form-check-label" for="remember-me">
                   Remember Me
                 </label>
@@ -82,31 +94,6 @@ $customizerHidden = 'customizer-hide';
               <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
             </div>
           </form>
-
-          <p class="text-center">
-            <span>New on our platform?</span>
-            <a href="{{url('auth/register-basic')}}">
-              <span>Create an account</span>
-            </a>
-          </p>
-
-          <div class="divider my-4">
-            <div class="divider-text">or</div>
-          </div>
-
-          <div class="d-flex justify-content-center">
-            <a href="javascript:;" class="btn btn-icon btn-label-facebook me-3">
-              <i class="tf-icons fa-brands fa-facebook-f fs-5"></i>
-            </a>
-
-            <a href="javascript:;" class="btn btn-icon btn-label-google-plus me-3">
-              <i class="tf-icons fa-brands fa-google fs-5"></i>
-            </a>
-
-            <a href="javascript:;" class="btn btn-icon btn-label-twitter">
-              <i class="tf-icons fa-brands fa-twitter fs-5"></i>
-            </a>
-          </div>
         </div>
       </div>
       <!-- /Register -->

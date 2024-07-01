@@ -1,17 +1,20 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\authentications\ForgotPasswordBasic;
-use App\Http\Controllers\authentications\LoginBasic;
-use App\Http\Controllers\authentications\ResetPasswordBasic;
-use App\Http\Controllers\RollsController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\dashboard\Analytics;
-use App\Http\Controllers\layouts\NavbarFull;
-use App\Http\Controllers\layouts\NavbarFullSidebar;
+
 use App\Http\Controllers\apps\UserList;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\RollsController;
 use App\Http\Controllers\apps\AccessRoles;
+use App\Http\Controllers\layouts\NavbarFull;
+use App\Http\Controllers\dashboard\Analytics;
 use App\Http\Controllers\cards\CardGamifications;
+use App\Http\Controllers\layouts\NavbarFullSidebar;
+use App\Http\Controllers\authentications\LoginBasic;
+use App\Http\Controllers\setting\SettingsController;
+use App\Http\Controllers\authentications\ResetPasswordBasic;
+use App\Http\Controllers\authentications\ForgotPasswordBasic;
+
 
 Route::get('/login', [LoginBasic::class, 'index'])->name('admin.login');
 Route::post('/auth-login', [LoginBasic::class, 'AdminLoginRequest'])->name('admin.login.request');
@@ -65,4 +68,15 @@ Route::middleware('auth')->group(function () {
     // Route::get('/edit/{id}', [MemberController::class, 'member_edit'])->name('member.edit');
     // Route::get('/view/{id}', [MemberController::class, 'member_view'])->name('member.view');
   });
+});
+
+ // settings Routes
+ Route::group(['prefix' => 'settings'], function () {
+  //View Routes
+  Route::get('/global-settings', [SettingsController::class, 'globalSettings'])->name('global-settings');
+  Route::post('/global-settings-update', [SettingsController::class, 'globalSettingsUpdate'])->name('global-settings-update');
+  Route::get('/pages/about-us', [SettingsController::class, 'aboutUs'])->name('about-us');
+  Route::post('/pages/about-us-store', [SettingsController::class, 'storeAboutUs'])->name('aboutUs-store');
+  Route::get('/pages/contact-us', [SettingsController::class, 'contactUs'])->name('contact-us');
+  Route::post('/pages/contactUs-store', [SettingsController::class, 'storeContactUs'])->name('contactUs-store');
 });

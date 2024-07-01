@@ -10,8 +10,8 @@ use Illuminate\Validation\ValidationException;
 
 class AdminController extends Controller
 {
-  public function user_store(Request $request)
-  {
+    public function user_store(Request $request)
+    {
     $validatedData = $request->validate([
       'name' => 'required|string|max:255',
       'email' => 'required|email',
